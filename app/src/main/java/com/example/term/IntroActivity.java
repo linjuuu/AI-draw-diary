@@ -4,10 +4,8 @@ import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.term.R;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class IntroActivity extends AppCompatActivity {
@@ -36,7 +34,7 @@ public class IntroActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 // 애니메이션이 끝난 후에 수행할 작업
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), Diary.class);
                 startActivity(intent);
 
                 // 현재 액티비티를 종료
