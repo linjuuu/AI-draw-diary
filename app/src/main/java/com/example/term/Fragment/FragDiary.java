@@ -2,6 +2,7 @@ package com.example.term.Fragment;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -23,11 +25,14 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
+
+import android.graphics.Bitmap;
 
 public class FragDiary extends Fragment {
 
@@ -35,8 +40,13 @@ public class FragDiary extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private static final String REST_API_KEY = "3e4b7b60413e29d52adb38fc317f0045";
+    private static final String REST_API_KEY_IMAGE = "9288091dcf057cb80ffa789e922e413d";
+    String negativePrompt = "sleeping cat, dog, human, ugly face, cropped";
+
+
     private static final String API_URL = "https://api.kakaobrain.com/v1/inference/kogpt/generation";
     EditText result;
+    ImageView imageView;
     Button transButton;
     Button saveButton;
     DatePicker datePicker;
@@ -74,6 +84,7 @@ public class FragDiary extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_frag_diary, container, false);
 
+        imageView = rootView.findViewById(R.id.imageView);
         result = rootView.findViewById(R.id.writeDiaryText);
         transButton = rootView.findViewById(R.id.finishButton);
         saveButton = rootView.findViewById(R.id.saveButton);
@@ -88,6 +99,90 @@ public class FragDiary extends Fragment {
 
         return rootView;
     }
+
+    private String convertInputStreamToString(InputStream inputStream) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+
+        try {
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private Bitmap t2i(String prompt) {
+        try {
+            URL url = new URL("https://api.kakaobrain.com/v2/inference/karlo/t2i");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Authorization", "KakaoAK " + REST_API_KEY);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setDoOutput(true);
+
+            JSONObject jsonInput = new JSONObject();
+            jsonInput.put("prompt", prompt);
+            jsonInput.put("negative_prompt", "sleeping cat, dog, human, ugly face, cropped");
+
+            urlConnection.getOutputStream().write(jsonInput.toString().getBytes("UTF-8"));
+
+            InputStream in = urlConnection.getInputStream();
+            JSONObject jsonResponse = new JSONObject(convertInputStreamToString(in));
+            String imageUrl = jsonResponse.getJSONArray("images").getJSONObject(0).getString("image");
+
+            // 이미지 다운로드
+            return downloadImage(imageUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private Bitmap downloadImage(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setDoInput(true);
+            urlConnection.connect();
+
+            // 이미지를 Bitmap으로 변환
+            return BitmapFactory.decodeStream(urlConnection.getInputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    private class T2iTask extends AsyncTask<String, Void, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            String textValue = params[0];
+            return t2i(textValue);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+    }
+
+
+
 
     private void showDatePickerDialog() {
         // 현재 날짜를 기본으로 설정
@@ -151,6 +246,7 @@ public class FragDiary extends Fragment {
 
                     // UI 업데이트
                     result.setText(textValue);
+                    new T2iTask().execute(textValue);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -158,6 +254,9 @@ public class FragDiary extends Fragment {
             }
         }
     }
+
+
+
 
     private static JSONObject sendPostRequest(String apiUrl, JSONObject requestBody) throws IOException, JSONException {
         URL url = new URL(apiUrl);
