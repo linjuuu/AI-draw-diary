@@ -1,15 +1,18 @@
 package com.example.term.Fragment;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.term.R;
 
@@ -18,11 +21,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 
 public class FragDiary extends Fragment {
 
@@ -33,6 +38,9 @@ public class FragDiary extends Fragment {
     private static final String API_URL = "https://api.kakaobrain.com/v1/inference/kogpt/generation";
     EditText result;
     Button transButton;
+    Button saveButton;
+    DatePicker datePicker;
+    Button chooseDateButton;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -41,7 +49,6 @@ public class FragDiary extends Fragment {
     public FragDiary() {
         // Required empty public constructor
     }
-
 
     // TODO: Rename and change types and number of parameters
     public static FragDiary newInstance(String param1, String param2) {
@@ -60,7 +67,6 @@ public class FragDiary extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
@@ -68,27 +74,45 @@ public class FragDiary extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_frag_diary, container, false);
 
-
         result = rootView.findViewById(R.id.writeDiaryText);
         transButton = rootView.findViewById(R.id.finishButton);
+        saveButton = rootView.findViewById(R.id.saveButton);
+        chooseDateButton = rootView.findViewById(R.id.chooseDateButton);
+        datePicker = rootView.findViewById(R.id.datePicker);
 
-        transButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new KogptApiTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-        });
+        // chooseDateButton 클릭 이벤트 설정
+        chooseDateButton.setOnClickListener(v -> showDatePickerDialog());
 
-
-
+        transButton.setOnClickListener(v -> new KogptApiTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR));
+        saveButton.setOnClickListener(v -> saveDiary());
 
         return rootView;
     }
 
+    private void showDatePickerDialog() {
+        // 현재 날짜를 기본으로 설정
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // DatePickerDialog 생성
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireActivity(),
+                (view, yearSelected, monthOfYear, dayOfMonth) -> {
+                    // 선택된 날짜로 설정
+                    datePicker.updateDate(yearSelected, monthOfYear, dayOfMonth);
+                },
+                year, month, day);
+
+        // DatePickerDialog 표시
+        datePickerDialog.show();
+    }
+
+
     private class KogptApiTask extends AsyncTask<Void, Void, JSONObject> {
         @Override
         protected JSONObject doInBackground(Void... voids) {
-
             String s = result.getText().toString();
             s += "귀엽게 변환";
 
@@ -102,7 +126,7 @@ public class FragDiary extends Fragment {
                 requestBody.put("n", 2);
 
                 // HTTP POST 요청 보내기
-                return  sendPostRequest(API_URL, requestBody);
+                return sendPostRequest(API_URL, requestBody);
 
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -171,4 +195,23 @@ public class FragDiary extends Fragment {
         }
     }
 
+    private void saveDiary() {
+        Context context = getActivity();
+        try {
+            int year = datePicker.getYear();
+            int month = datePicker.getMonth() + 1; // Month is 0-based
+            int day = datePicker.getDayOfMonth();
+
+            String filename = String.format("%02d%02d%02d.txt", year % 100, month, day);
+
+            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            fos.write(result.getText().toString().getBytes());
+            fos.close();
+
+            Toast.makeText(context, "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "일기 저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

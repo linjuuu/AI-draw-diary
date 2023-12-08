@@ -1,29 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- fragment_frag_calendar.xml -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="false"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".Fragment.FragCalendar">
 
-    <LinearLayout
+    <!-- CalendarView 추가 -->
+    <CalendarView
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/calendar" />
+    <!-- 데이터 표시 버튼 추가 -->
 
+    <TextView
+        android:id="@+id/loadDiary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 
+    <Button
+        android:id="@+id/showDataButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Data" />
 
-
-
-
-    </LinearLayout>
 </LinearLayout>
