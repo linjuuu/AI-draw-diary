@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -15,40 +16,31 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/diary" />
+            android:src="@drawable/initimage" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/writeDiaryText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="textMultiLine"
-            android:gravity="top|start"
-            android:layout_gravity="top|start"
-            android:ems="10"
-            android:hint="일기를 입력하세요 " />
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_weight="6">
 
-            <Button
+            <ImageButton
                 android:id="@+id/chooseDateButton"
-                android:layout_width="wrap_content"
+                android:layout_width="111dp"
                 android:layout_height="wrap_content"
-                android:text="날짜 고르기" />
+                android:scaleType="fitCenter"
+                android:background="@android:color/white"
+                android:src="@drawable/day"
+                android:text="Day" />
 
             <DatePicker
                 android:id="@+id/datePicker"
@@ -56,24 +48,44 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/finishButton"
+                android:layout_width="89dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:scaleType="fitCenter"
+                android:src="@drawable/finish"
+                android:text="Finish" />
+
+            <ImageButton
+                android:id="@+id/resetButton"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:scaleType="fitCenter"
+                android:src="@drawable/reset"
+                android:text="reset" />
+
+            <ImageButton
+                android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="작성완료" />
-
-            <Button
-                android:id="@+id/resetButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="초기화" />
-
-            <Button
-                android:id="@+id/saveButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="저장하기" />
+                android:background="@android:color/white"
+                android:scaleType="fitCenter"
+                android:src="@drawable/save"
+                android:text="save" />
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/writeDiaryText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top|start"
+            android:layout_weight="1"
+            android:ems="10"
+            android:gravity="top|start"
+            android:hint="일기를 입력하세요 "
+            android:inputType="textMultiLine" />
 
     </LinearLayout>
 </LinearLayout>

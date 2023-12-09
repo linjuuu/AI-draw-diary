@@ -1,23 +1,33 @@
-<!-- res/layout/activity_intro.xml -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- activity_intro.xml -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#24000000">
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context=".IntroActivity">
 
-    <LinearLayout
+    <!-- 이미지뷰 1 -->
+    <ImageView
+        android:id="@+id/imagelogo1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical"
-        android:padding="10sp">
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/intrologo1" />
 
-        <ImageView
-            android:id="@+id/introLogo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/intro" />
-    </LinearLayout>
-
+    <!-- 이미지뷰 2 -->
+    <ImageView
+        android:id="@+id/imagelogo2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/intrologo2" />
 
 </RelativeLayout>

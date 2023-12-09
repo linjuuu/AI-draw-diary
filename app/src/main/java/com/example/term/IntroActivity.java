@@ -1,52 +1,58 @@
+// IntroActivity.java
+
 package com.example.term;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.os.Handler;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
 public class IntroActivity extends AppCompatActivity {
-    ImageView introLogo;
-    Animation introAnim;
+
+    private static final int SPLASH_TIME = 2000; // 2 seconds
+    ImageView imagelogo1, imagelogo2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        imagelogo1 = findViewById(R.id.imagelogo1);
+        imagelogo2 = findViewById(R.id.imagelogo2);
 
-
-
-
-        //-------------------------------------------------------------------
-        //인트로 띄우기
-        introLogo = findViewById(R.id.introLogo);
-        introAnim = AnimationUtils.loadAnimation(this, R.anim.intro_anim);
-        introLogo.startAnimation(introAnim);
-
-        introAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
+        // 0.2초 간격으로 번갈아가며 이미지를 보여주는 Runnable
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            int count = 0;
 
             @Override
-            public void onAnimationEnd(Animation animation) {
-                // 애니메이션이 끝난 후에 수행할 작업
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+            public void run() {
+                if (count % 2 == 0) {
+                    imagelogo1.setAlpha(1f);
+                    imagelogo2.setAlpha(0f);
+                } else {
+                    imagelogo1.setAlpha(0f);
+                    imagelogo2.setAlpha(1f);
+                }
 
-                // 현재 액티비티를 종료
-                finish();
+                count++;
+
+                if (count <= 10) { // 예시로 2초 간격으로 10번 반복
+                    handler.postDelayed(this, 200);
+                }
             }
+        };
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
+        // 0.2초 후 runnable 실행
+        handler.postDelayed(runnable, 200);
 
-
-
+        // 2초 후 MainActivity로 이동
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(IntroActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // 현재 액티비티를 종료
+        }, SPLASH_TIME);
     }
 }

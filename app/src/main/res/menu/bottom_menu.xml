@@ -11,7 +11,7 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:icon="@drawable/intro"
+        android:icon="@drawable/home"
         android:title="홈" />
 
 

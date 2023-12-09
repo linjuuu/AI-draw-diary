@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         // 초기 플래그먼트 설정
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_diary).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_home).commitAllowingStateLoss();
+        bottomNavigationView.getMenu().getItem(1).setChecked(true); // 홈 프래그먼트가 두 번째 아이템이므로 1을 선택합니다.
+
 
 
         // 리스너 등록

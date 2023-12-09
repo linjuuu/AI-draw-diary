@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -47,10 +48,12 @@ public class FragDiary extends Fragment {
     private static final String API_URL = "https://api.kakaobrain.com/v1/inference/kogpt/generation";
     EditText result;
     ImageView imageView;
-    Button transButton;
-    Button saveButton;
+    ImageButton chooseDateButton;
+    ImageButton transButton;
+    ImageButton resetButton;
+    ImageButton saveButton;
     DatePicker datePicker;
-    Button chooseDateButton;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -89,6 +92,7 @@ public class FragDiary extends Fragment {
         transButton = rootView.findViewById(R.id.finishButton);
         saveButton = rootView.findViewById(R.id.saveButton);
         chooseDateButton = rootView.findViewById(R.id.chooseDateButton);
+        resetButton = rootView.findViewById(R.id.resetButton);
         datePicker = rootView.findViewById(R.id.datePicker);
 
         // chooseDateButton 클릭 이벤트 설정
