@@ -85,6 +85,7 @@
             android:ems="10"
             android:gravity="top|start"
             android:hint="일기를 입력하세요 "
+            android:fontFamily="@font/typo_crayonm"
             android:inputType="textMultiLine" />
 
     </LinearLayout>

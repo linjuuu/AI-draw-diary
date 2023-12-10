@@ -42,10 +42,10 @@ public class FragDiary extends Fragment {
 
     private static final String REST_API_KEY = "3e4b7b60413e29d52adb38fc317f0045";
     private static final String REST_API_KEY_IMAGE = "9288091dcf057cb80ffa789e922e413d";
-    String negativePrompt = "sleeping cat, dog, human, ugly face, cropped";
-
 
     private static final String API_URL = "https://api.kakaobrain.com/v1/inference/kogpt/generation";
+    private static final String API_URL_IMAGE = "https://api.kakaobrain.com/v2/inference/karlo/t2i";
+
     EditText result;
     ImageView imageView;
     ImageButton chooseDateButton;
@@ -97,7 +97,13 @@ public class FragDiary extends Fragment {
 
         // chooseDateButton 클릭 이벤트 설정
         chooseDateButton.setOnClickListener(v -> showDatePickerDialog());
-
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                result.setText("");
+                imageView.setImageResource(R.drawable.initimage);
+            }
+        });
         transButton.setOnClickListener(v -> new KogptApiTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR));
         saveButton.setOnClickListener(v -> saveDiary());
 
@@ -128,16 +134,16 @@ public class FragDiary extends Fragment {
 
     private Bitmap t2i(String prompt) {
         try {
-            URL url = new URL("https://api.kakaobrain.com/v2/inference/karlo/t2i");
+            URL url = new URL(API_URL_IMAGE);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Authorization", "KakaoAK " + REST_API_KEY);
+            urlConnection.setRequestProperty("Authorization", "KakaoAK " + REST_API_KEY_IMAGE);
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setDoOutput(true);
 
             JSONObject jsonInput = new JSONObject();
+            prompt = "(pencil drawing)\nHe doing best for his homework. he sit on chair, and see his monitor. in the roxy";
             jsonInput.put("prompt", prompt);
-            jsonInput.put("negative_prompt", "sleeping cat, dog, human, ugly face, cropped");
 
             urlConnection.getOutputStream().write(jsonInput.toString().getBytes("UTF-8"));
 
@@ -213,17 +219,16 @@ public class FragDiary extends Fragment {
     private class KogptApiTask extends AsyncTask<Void, Void, JSONObject> {
         @Override
         protected JSONObject doInBackground(Void... voids) {
-            String s = result.getText().toString();
-            s += "귀엽게 변환";
+            String s = result.getText().toString() + "\n\n한줄 요약:";
 
             try {
                 // 요청 파라미터 구성
                 JSONObject requestBody = new JSONObject();
                 requestBody.put("prompt", s);
-                requestBody.put("max_tokens", 80);
+                requestBody.put("max_tokens", 120);
                 requestBody.put("temperature", 0.1);
-                requestBody.put("top_p", 0.1);
-                requestBody.put("n", 2);
+                requestBody.put("top_p", 0.3);
+                requestBody.put("n", 1);
 
                 // HTTP POST 요청 보내기
                 return sendPostRequest(API_URL, requestBody);
@@ -346,3 +351,7 @@ public class FragDiary extends Fragment {
         }
     }
 }
+
+
+
+

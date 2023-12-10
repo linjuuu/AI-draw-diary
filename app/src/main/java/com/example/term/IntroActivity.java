@@ -39,7 +39,7 @@ public class IntroActivity extends AppCompatActivity {
 
                 count++;
 
-                if (count <= 10) { // 예시로 2초 간격으로 10번 반복
+                if (count <= 10) {
                     handler.postDelayed(this, 200);
                 }
             }
@@ -52,7 +52,7 @@ public class IntroActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(IntroActivity.this, MainActivity.class);
             startActivity(intent);
-            finish(); // 현재 액티비티를 종료
+            finish();
         }, SPLASH_TIME);
     }
 }

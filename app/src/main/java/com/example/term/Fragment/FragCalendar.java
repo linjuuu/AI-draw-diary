@@ -28,9 +28,9 @@ import java.io.InputStreamReader;
 
 public class FragCalendar extends Fragment {
 
+    private View rootView; // 추가된 부분
     CalendarView calendarView;
     ImageButton showDataButton;
-    TextView loadDiary;
     public FragCalendar() {
         // Required empty public constructor
     }
@@ -38,8 +38,8 @@ public class FragCalendar extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_frag_calendar, container, false);
+        rootView = inflater.inflate(R.layout.fragment_frag_calendar, container, false);
+        return rootView;
     }
 
     @Override
@@ -53,45 +53,16 @@ public class FragCalendar extends Fragment {
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                // 선택된 날짜에 해당하는 파일명 생성 (예: 231208.txt)
-                final String filename = String.format("%02d%02d%02d.txt", year % 100, month + 1, dayOfMonth);
-                final String imageFilename = String.format("%02d%02d%02d.png", year % 100, month + 1, dayOfMonth);
-
                 // 데이터 표시 버튼 클릭 리스너 설정
                 showDataButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // 파일 읽기 및 내용 표시
-                        String data = readDataFromFile(filename);
-
-                        // 이미지 파일 읽기 및 표시
-                        Bitmap imageBitmap = readImageFromFile(imageFilename);
-
-                        // 다이얼로그 레이아웃 설정
-                        View dialogLayout = getLayoutInflater().inflate(R.layout.dialog_image_view, null);
-                        ImageView dialogImageView = dialogLayout.findViewById(R.id.dialogImageView);
-                        dialogImageView.setImageBitmap(imageBitmap);
-
-                        TextView dialogTextView = dialogLayout.findViewById(R.id.dialogTextView);
-                        dialogTextView.setText(data);
-
-                        // 다이얼로그 생성 및 설정
-                        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                        builder.setTitle(String.format("%02d%02d%02d 의 일기", year % 100, month + 1, dayOfMonth));
-
-                        // 레이아웃 설정
-                        builder.setView(dialogLayout);
-
-                        // 확인 버튼 추가
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss(); // 다이얼로그 닫기
-                            }
-                        });
+                        final String filename = String.format("%02d%02d%02d.txt", year % 100, month + 1, dayOfMonth);
+                        final String imageFilename = String.format("%02d%02d%02d.png", year % 100, month + 1, dayOfMonth);
 
                         // 다이얼로그 표시
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        ViewDialogFragment dialog = new ViewDialogFragment(filename, imageFilename);
+                        dialog.show(getFragmentManager(), "ViewDialogFragment");
                     }
                 });
             }

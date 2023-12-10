@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
     // 바텀 네비게이션
     BottomNavigationView bottomNavigationView;
 
-    private String TAG = "메인";
-
     // 프래그먼트 변수
     Fragment fragment_diary, fragment_home, fragment_calendar;
 
@@ -37,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
         // 바텀 네비게이션
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        // 초기 플래그먼트 설정
+        // 초기 프래그먼트 설정
         getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment_home).commitAllowingStateLoss();
-        bottomNavigationView.getMenu().getItem(1).setChecked(true); // 홈 프래그먼트가 두 번째 아이템이므로 1을 선택합니다.
+        bottomNavigationView.getMenu().getItem(1).setChecked(true);
 
 
 
@@ -47,24 +45,20 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Log.i(TAG, "바텀 네비게이션 클릭");
 
                 if(item.getItemId() == R.id.diary)
                 {
-                        Log.i(TAG, "diary");
                         getSupportFragmentManager().beginTransaction() .replace(R.id.main_layout,fragment_diary).commitAllowingStateLoss();
                         return true;
                 }
                 else if(item.getItemId() == R.id.home)
                 {
-                    Log.i(TAG, "home");
                     getSupportFragmentManager().beginTransaction() .replace(R.id.main_layout, fragment_home).commitAllowingStateLoss();
                     return true;
                 }
 
                 else if(item.getItemId() == R.id.calendar)
                 {
-                    Log.i(TAG, "calendar");
                     getSupportFragmentManager().beginTransaction() .replace(R.id.main_layout, fragment_calendar).commitAllowingStateLoss();
                     return true;
                 }
