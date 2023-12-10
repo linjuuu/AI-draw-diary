@@ -182,6 +182,7 @@ public class FragDiary extends Fragment {
         @Override
         protected void onPostExecute(Bitmap result) {
             imageView.setImageBitmap(result);
+            saveImageToInternalStorage(result);
         }
     }
 
@@ -311,10 +312,37 @@ public class FragDiary extends Fragment {
             fos.write(result.getText().toString().getBytes());
             fos.close();
 
+
+
             Toast.makeText(context, "일기가 저장되었습니다.", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(context, "일기 저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveImageToInternalStorage(Bitmap bitmap) {
+        Context context = getActivity();
+        try {
+            int year = datePicker.getYear();
+            int month = datePicker.getMonth() + 1; // Month is 0-based
+            int day = datePicker.getDayOfMonth();
+
+            String filename = String.format("%02d%02d%02d.png", year % 100, month, day);
+
+            // 내부 저장소에 파일 생성
+            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+
+            // Bitmap을 PNG 형식으로 파일에 저장
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+            // 파일 닫기
+            fos.close();
+
+            Toast.makeText(context, "이미지가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "이미지 저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 }
