@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,8 +15,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-
-import com.example.term.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +31,8 @@ import java.net.URL;
 import java.util.Calendar;
 
 import android.graphics.Bitmap;
+
+import com.example.term.R;
 
 public class FragDiary extends Fragment {
 
@@ -142,7 +141,7 @@ public class FragDiary extends Fragment {
             urlConnection.setDoOutput(true);
 
             JSONObject jsonInput = new JSONObject();
-            prompt = "(pencil drawing)\nHe doing best for his homework. he sit on chair, and see his monitor. in the roxy";
+            prompt = "(pencil drawing)" + prompt;
             jsonInput.put("prompt", prompt);
 
             urlConnection.getOutputStream().write(jsonInput.toString().getBytes("UTF-8"));

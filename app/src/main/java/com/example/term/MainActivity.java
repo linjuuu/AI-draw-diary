@@ -4,12 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.term.Fragment.FragCalendar;
 import com.example.term.Fragment.FragDiary;
 import com.example.term.Fragment.FragHome;
-import com.example.term.Fragment.FragCalendar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction() .replace(R.id.main_layout,fragment_diary).commitAllowingStateLoss();
                         return true;
                 }
-                else if(item.getItemId() == R.id.home)
+                else if(item.getItemId() == R.id.homeicon)
                 {
                     getSupportFragmentManager().beginTransaction() .replace(R.id.main_layout, fragment_home).commitAllowingStateLoss();
                     return true;

@@ -9,9 +9,9 @@
         />
 
     <item
-        android:id="@+id/home"
+        android:id="@+id/homeicon"
         android:enabled="true"
-        android:icon="@drawable/home"
+        android:icon="@drawable/homeicon"
         android:title="홈" />
 
 
